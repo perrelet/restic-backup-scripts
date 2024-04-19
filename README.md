@@ -63,7 +63,7 @@ nano ~/.env.restic
 > Note that `~/` is equivalent to the current users home directoy, in this case `/root`.
 
 > [!IMPORTANT]  
-> Be sure to save the restic password in .restic.pwd to your password vault.
+> Be sure to save the restic password in `.restic.pwd` to your password vault.
 
 ## Sourcing the Variables
 
@@ -124,3 +124,15 @@ Backing this file up every day will make your restic repository grow
 rapidly and should be excluded from primary file backups. 
 
 See [Dealing With Transient Files](https://github.com/mhw/restic-backup-scripts?tab=readme-ov-file#dealing-with-transient-files) for another approach.
+
+## Useful Commands
+
+`restic snapshots` View all the snapshots
+
+`restic snapshots --tag tag-name` Filter snapshots by tag
+
+`restic forget {snapshot-id}` Forget a snapshot (files reamain in repo until prune)
+
+`restic prune` Purge forgotten / expired backups
+
+`restic unlock` Unlock files
