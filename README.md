@@ -15,13 +15,55 @@ Main features:
 Currently in use in production backing up an Ubuntu 18.04 server to
 [Backblaze B2](https://www.backblaze.com/b2/cloud-storage.html).
 
-## Getting Started
+## Install Restic
 
-Create a Unix user who will execute the backup jobs:
+https://restic.readthedocs.io/en/latest/020_installation.html
 
 ```
-adduser --disabled-password restic
+sudo apt-get update
+apt-get install restic
 ```
+
+## MySQL Client Credentials 
+
+To avoid needing to insert the root users password into the scripts follow https://tecadmin.net/mysql-commands-without-password-prompt/ 
+
+```
+touch ~/.my.cnf 
+nano ~/.my.cnf 
+```
+
+```
+[client]
+user=your_username
+password=your_password
+```
+
+## Clone the Repo
+
+```
+cd /home
+git clone https://github.com/mhw/restic-backup-scripts
+```
+
+Create a `~/.env.restic` file and fill it in with the key needed to
+access your storage, and the restic repository in it:
+
+```
+cd restic-backup-scripts
+cp sample.env.restic ~/.env.restic
+dd if=/dev/urandom bs=15 count=1 2>/dev/null | openssl enc -a >~/.restic.pwd
+chmod o-r ~/.restic.pwd
+nano ~/.env.restic
+```
+
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+💡 Note that `~/` is equivalent to the current users home directoy, in this case `/root`.
+
+
+---
 
 Follow the instructions
 [in the restic documentation](https://restic.readthedocs.io/en/stable/080_examples.html#backing-up-your-system-without-running-restic-as-root)
@@ -68,7 +110,7 @@ replace setting as appropriate for your chosen storage provider.
 Source `.env.restic` from `.bashrc` if you want to be able to run restic
 easily from the command line.
 
-Comment out or remove lines in `all-backups.sh` that you do not need.
+Comment out or remove lines in `run-all.sh` that you do not need.
 For example, if you do not have a MySQL database, comment out the
 `./mysql-backup.sh` line.
 
@@ -144,7 +186,7 @@ role.
 Edit the user's crontab: `crontab -e`. Use a line like this:
 
 ```
-30 2 * * * /home/restic/restic-backup-scripts/all-backups.sh
+30 2 * * * /home/restic/restic-backup-scripts/run-all.sh
 ```
 
 ## Healthchecks.io (Optional)
@@ -158,7 +200,7 @@ Update the variables in the Makefile to choose a different platform or version.
 Then use a crontab line like this:
 
 ```
-30 2 * * * cd /home/restic/restic-backup-scripts; ./runitor -uuid 2f9-a5c-0123 -silent -- ./all-backups.sh
+30 2 * * * cd /home/restic/restic-backup-scripts; ./runitor -uuid 2f9-a5c-0123 -silent -- ./run-all.sh
 ```
 
 Substitute a valid check UUID from healthchecks.io in the command above.
