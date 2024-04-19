@@ -34,13 +34,6 @@ use_archive_repository() {
 	fi
 }
 
-use_transient_repository() {
-	if [ -n "$RESTIC_TRANSIENT_REPOSITORY" ]
-	then
-		export RESTIC_REPOSITORY=$RESTIC_TRANSIENT_REPOSITORY
-	fi
-}
-
 [ -d "log" ] || mkdir log
 
 LOG="log/$(basename $0)-$(date +%Y-%m-%d).log"
