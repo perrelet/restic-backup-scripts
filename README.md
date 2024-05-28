@@ -26,9 +26,14 @@ sudo apt-get update
 apt-get install restic
 ```
 
+## Security Considerations
+
+- https://restic.readthedocs.io/en/latest/080_examples.html#backing-up-your-system-without-running-restic-as-root
+- https://forum.restic.net/t/any-downsides-to-running-restic-as-root/5908
+
 ## MySQL Client Credentials 
 
-To avoid needing to insert the root users password into the scripts follow https://tecadmin.net/mysql-commands-without-password-prompt/ 
+To avoid needing to insert the mysql password directly into the bash scripts follow https://tecadmin.net/mysql-commands-without-password-prompt/ 
 
 ```
 touch ~/.my.cnf 
@@ -45,7 +50,7 @@ password=your_password
 
 ```
 cd /home
-git clone https://github.com/mhw/restic-backup-scripts
+git clone https://github.com/perrelet/restic-backup-scripts.git
 ```
 
 Create a `~/.env.restic` file and fill it in with the key needed to
@@ -70,11 +75,11 @@ nano ~/.env.restic
 We can source export our variables with `source /root/.env.restic` (or equivalently `. /root/.env.restic`). However it is recommended to source them from .bashrc so they are loaded when ever the user logs in:
 
 ```
-nano .bashrc
+nano ~/.bashrc
 
 >>> source /root/.env.restic
 
-source .bashrc
+source ~/.bashrc
 ```
 
 ## Initializing
@@ -93,6 +98,9 @@ chmod +x run-files.sh
 ```
 
 Customise `run-all.sh`, `run-files.sh`, `backup-mysql.sh`, `purge.sh`, etc as required and run to them to test they are working correctly. Note that the `purge.sh` will dry unless the the `--really` flag is present.
+
+> [!NOTE]  
+> Run `chmod +x *.sh` to make the bash files executable
 
 ## Scheduling
 
