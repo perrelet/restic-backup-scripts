@@ -6,7 +6,12 @@ err_exit() {
 
 trap 'err_exit $LINENO' ERR
 
-[ -f "$HOME/.env.restic" ] && . $HOME/.env.restic
+# Prefer fixed env path for cron/systemd reliability
+if [ -f /etc/restic/env ]; then
+    . /etc/restic/env
+elif [ -f "$HOME/.env.restic" ]; then
+    . "$HOME/.env.restic"
+fi
 
 if [ -z "$LOGNAME" ]
 then
